@@ -18,21 +18,29 @@ inputTA.addEventListener('keydown', function() {
 }, false);
 
 function process(text) {
-  // Split content of textarea into string array delimited by newline characters
-  let textChunks = text.split('\n');
-  let myHTML = '';
-  console.log(textChunks);
+  // Parse for inline syntax, including *emphasis*, **strong** etc
+  let parsedHTML = parseInlineSyntax(text);
+  console.log(parsedHTML);
 
-  textChunks.forEach(function(chunk) {
+  // Split content of textarea into string array delimited by newline characters
+  let chunkedHTML = parsedHTML.split('\n');
+
+  parsedHTML = '';  // reset HTML container
+  console.log(chunkedHTML);
+
+  chunkedHTML.forEach(function(chunk) {
     let firstChar = chunk.charAt(0);
     let length = chunk.length;
     console.log(length);
 
     switch(firstChar) {
       case '#':
-        myHTML += handleHeadings(chunk, length);
+        parsedHTML += handleHeadings(chunk, length);
+        break;
+      default:
+        parsedHTML += `<p>${chunk}</p>`;
         break;
     }
   });
-  outputDiv.innerHTML = myHTML;
+  outputDiv.innerHTML = parsedHTML;
 }
